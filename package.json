@@ -1,0 +1,41 @@
+{
+  "name": "discord-quote-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./prod/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node -r dotenv/config ./prod/index.js",
+    "dev:build": "tsc -w",
+    "dev:run": "nodemon -r dotenv/config ./prod/index.js",
+    "start:dev": "concurrently npm:dev:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haiakbar/dcbot-make-quote.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/haiakbar/dcbot-make-quote/issues"
+  },
+  "homepage": "https://github.com/haiakbar/dcbot-make-quote#readme",
+  "devDependencies": {
+    "@types/node": "^17.0.39",
+    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/parser": "^5.27.0",
+    "concurrently": "^7.2.1",
+    "eslint": "^8.17.0",
+    "nodemon": "^2.0.16",
+    "typescript": "^4.7.3"
+  },
+  "dependencies": {
+    "@discordjs/builders": "^0.13.0",
+    "@discordjs/rest": "^0.4.1",
+    "@types/sharp": "^0.30.2",
+    "discord.js": "^13.7.0",
+    "dotenv": "^16.0.1",
+    "mongoose": "^6.3.5",
+    "sharp": "^0.30.6"
+  }
+}
