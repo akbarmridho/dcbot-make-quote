@@ -5,14 +5,7 @@ interface TextLine {
   width: number
 }
 
-class HeightError extends Error {
-  constructor (message: string) {
-    super(message)
-    this.name = 'HeightError'
-  }
-}
-
-const splitText = (ctx: CanvasRenderingContext2D, text:string) : TextLine[] => {
+const splitText = (ctx: CanvasRenderingContext2D, text:string) : [TextLine[], number] => {
   const words = new Map(text.split(' ').map(word => {
     return [word, ctx.measureText(` ${word}`).width]
   }))
@@ -50,38 +43,38 @@ const splitText = (ctx: CanvasRenderingContext2D, text:string) : TextLine[] => {
 
   const heightApprox = result.length * sizePx + (result.length - 1) * sizePx / 4
 
-  if (heightApprox > ctx.canvas.height) {
-    throw new HeightError('String too high')
-  }
-
-  return result
+  return [result, heightApprox]
 }
 
 export const generateText = (canvasWidth: number, canvasHeight:number, text:string) => {
   let fontSize = 50
-  let lines: TextLine[]|undefined
+  let lines: TextLine[] = []
 
   const ctx = createCanvas(canvasWidth, canvasHeight).getContext('2d')
   ctx.fillStyle = 'rgb(255,255,255)'
 
   while (fontSize >= 20) {
     ctx.font = `${fontSize}px sans-serif`
+    let currentHeight = 0
 
-    try {
-      lines = splitText(ctx, text)
-      break
-    } catch (error) {
-      if (error instanceof HeightError) {
-        fontSize = fontSize - 10
-        continue
-      }
+    for (const textLine of text.split('\n')) {
+      const [textLines, textHeight] = splitText(ctx, textLine)
+      currentHeight = currentHeight + textHeight
+      lines.push(...textLines)
     }
+
+    if (currentHeight < canvasHeight) {
+      break
+    }
+
+    fontSize = fontSize - 10
+    lines = []
   }
 
   let yPos = 50
 
   if (lines) {
-    const newHeight = fontSize * lines.length + 0.25 * fontSize * (lines.length - 1) + fontSize
+    const newHeight = Math.ceil(fontSize * (lines.length + 0.5) + 0.25 * fontSize * (lines.length - 1))
     const newCanvas = createCanvas(canvasWidth, newHeight)
     const newCtx = newCanvas.getContext('2d')
     newCtx.fillStyle = 'rgb(255,255,255)'
@@ -96,5 +89,5 @@ export const generateText = (canvasWidth: number, canvasHeight:number, text:stri
     return newCanvas
   }
 
-  throw Error('Failed to generate text')
+  throw new Error('Unable to generate text')
 }
