@@ -10,7 +10,7 @@ export const generateBnw = async (profilePicture: Buffer, text: string, author?:
 
   const background = sharp(imagePath)
   const backgroundMetric = await background.metadata()
-  const waifu = sharp(profilePicture).resize({ height: backgroundMetric.height })
+  const authorImage = sharp(profilePicture).resize({ height: backgroundMetric.height })
 
   return await sharp({
     create: {
@@ -21,7 +21,7 @@ export const generateBnw = async (profilePicture: Buffer, text: string, author?:
     }
   }).composite([
     {
-      input: await waifu.grayscale().toBuffer(),
+      input: await authorImage.grayscale().toBuffer(),
       top: 0,
       left: 0
     },

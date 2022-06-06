@@ -8,9 +8,9 @@ export interface ConfigInterface {
 
 export const configSchema = new Schema<ConfigInterface>(
   {
-    serverId: {type: String, required:true},
-    sameChannel: {type: Boolean, required:true, default:true},
-    channelId: {type:String}
+    serverId: { type: String, required: true },
+    sameChannel: { type: Boolean, required: true, default: true },
+    channelId: { type: String }
   }
 )
 
@@ -20,6 +20,6 @@ export const getConfig = async (serverId: string) => {
   return (await configModel.findOne({ serverId })) ||
     (await configModel.create({
       serverId,
-      sameChannel:true
+      sameChannel: true
     }))
 }
