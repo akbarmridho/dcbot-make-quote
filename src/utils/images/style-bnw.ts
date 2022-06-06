@@ -1,9 +1,9 @@
 import { resolve } from 'node:path'
 import sharp from 'sharp'
-import { _projectPath } from '../get-cwd'
+import { _imagesPath } from '../get-cwd'
 import { generateText } from './generate-text'
 
-const imagePath = resolve(_projectPath, 'images/bnw/template.png')
+const imagePath = resolve(_imagesPath, 'bnw/template.png')
 
 export const generateBnw = async (profilePicture: Buffer, text: string, author?:string) => {
   const textCanvas = generateText(700, 400, text, author)
@@ -33,5 +33,8 @@ export const generateBnw = async (profilePicture: Buffer, text: string, author?:
       top: Math.ceil((backgroundMetric.height! - textCanvas.height) / 2),
       left: 400 + Math.ceil((backgroundMetric.width! - textCanvas.width - 400) / 2)
     }
-  ]).toBuffer()
+  ]).jpeg({
+    quality: 75
+  })
+    .toBuffer()
 }
