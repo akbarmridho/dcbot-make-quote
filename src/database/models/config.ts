@@ -20,6 +20,6 @@ export const getConfig = async (serverId: string) => {
   return (await configModel.findOne({ serverId })) ||
     (await configModel.create({
       serverId,
-      sameChannel: true
+      sameChannel: false
     }))
 }

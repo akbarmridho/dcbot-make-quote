@@ -1,4 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
+import { getConfig } from '../database/models/config'
 import { Command } from '../interfaces/command'
 import { imageBufferFromUrl } from '../utils/images/image'
 import { generateBnw } from '../utils/images/style-bnw'
@@ -8,7 +9,9 @@ export const quote: Command = {
     .setName('quote')
     .setDescription('Create quote from message id')
     .addStringOption(option => option.setName('message')
-      .setDescription('Desired message id. You might need developer mode for this').setRequired(true)),
+      .setDescription('Desired message id. You might need developer mode for this').setRequired(true))
+    .addBooleanOption(option => option.setName('this-channel')
+      .setDescription('Send quote to this channel instead')),
   async run (interaction) {
     await interaction.deferReply()
 
@@ -18,6 +21,16 @@ export const quote: Command = {
     const profileImageBuffer = await imageBufferFromUrl(message.author.avatarURL()!)
     const generatedImage = await generateBnw(profileImageBuffer, message.content, message.author.tag)
 
-    await interaction.editReply({ files: [generatedImage] })
+    const serverConfig = await getConfig(interaction.guildId!)
+
+    if (serverConfig.sameChannel && !interaction.options.getBoolean('this-channel')) {
+      const channel = await interaction.guild?.channels.fetch(serverConfig.channelId!)
+      if (channel?.isText()) {
+        channel.send({ files: [generatedImage] })
+      }
+      await interaction.editReply('Done')
+    } else {
+      await interaction.editReply({ files: [generatedImage] })
+    }
   }
 }
