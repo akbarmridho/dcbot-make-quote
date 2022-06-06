@@ -46,7 +46,7 @@ const splitText = (ctx: CanvasRenderingContext2D, text:string) : [TextLine[], nu
   return [result, heightApprox]
 }
 
-export const generateText = (canvasWidth: number, canvasHeight:number, text:string) => {
+export const generateText = (canvasWidth: number, canvasHeight:number, text:string, author?:string) => {
   let fontSize = 50
   let lines: TextLine[] = []
 
@@ -74,7 +74,7 @@ export const generateText = (canvasWidth: number, canvasHeight:number, text:stri
   let yPos = 50
 
   if (lines) {
-    const newHeight = Math.ceil(fontSize * (lines.length + 0.5) + 0.25 * fontSize * (lines.length - 1))
+    const newHeight = author ? Math.ceil(1.25 * fontSize * (lines.length + 1)) : Math.ceil(1.25 * fontSize * lines.length)
     const newCanvas = createCanvas(canvasWidth, newHeight)
     const newCtx = newCanvas.getContext('2d')
     newCtx.fillStyle = 'rgb(255,255,255)'
@@ -84,6 +84,12 @@ export const generateText = (canvasWidth: number, canvasHeight:number, text:stri
       const xPos = Math.ceil((canvasWidth - width) / 2)
       newCtx.fillText(text, xPos, yPos, canvasWidth)
       yPos = yPos + Math.ceil(5 * fontSize / 4)
+    }
+
+    if (author) {
+      newCtx.fillStyle = 'rgba(255,255,255,0.8)'
+      newCtx.font = `${Math.ceil(0.8 * fontSize)}px sans-serif`
+      newCtx.fillText(`- ${author}`, Math.ceil((canvasWidth - newCtx.measureText(`- ${author}`).width) / 2), yPos)
     }
 
     return newCanvas
