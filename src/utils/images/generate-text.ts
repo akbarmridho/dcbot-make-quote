@@ -88,7 +88,7 @@ export const generateText = (canvasWidth: number, canvasHeight:number, text:stri
 
     if (author) {
       newCtx.fillStyle = 'rgba(255,255,255,0.8)'
-      newCtx.font = `${Math.ceil(0.8 * fontSize)}px sans-serif`
+      newCtx.font = `italic ${Math.ceil(0.8 * fontSize)}px sans-serif`
       newCtx.fillText(`- ${author}`, Math.ceil((canvasWidth - newCtx.measureText(`- ${author}`).width) / 2), yPos)
     }
 

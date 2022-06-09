@@ -21,7 +21,12 @@ export const generateBnw = async (profilePicture: Buffer, text: string, author?:
     }
   }).composite([
     {
-      input: await authorImage.grayscale().toBuffer(),
+      input: await authorImage.extract({
+        width: Math.ceil(2 * backgroundMetric.height! / 3),
+        height: backgroundMetric.height!,
+        top: 0,
+        left: Math.ceil(backgroundMetric.height! / 6)
+      }).grayscale().toBuffer(),
       top: 0,
       left: 0
     },
