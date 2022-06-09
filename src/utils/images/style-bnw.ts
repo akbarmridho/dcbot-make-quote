@@ -6,7 +6,7 @@ import { generateText } from './generate-text'
 const imagePath = resolve(_imagesPath, 'bnw/template.png')
 
 export const generateBnw = async (profilePicture: Buffer, text: string, author?:string) => {
-  const textCanvas = generateText(700, 400, text, author)
+  const textCanvas = await generateText(700, 400, text, author)
 
   const background = sharp(imagePath)
   const backgroundMetric = await background.metadata()

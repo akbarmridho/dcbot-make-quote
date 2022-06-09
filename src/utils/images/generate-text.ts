@@ -1,4 +1,5 @@
 import { createCanvas, CanvasRenderingContext2D } from 'canvas'
+import { fillTextWithTwemoji } from 'node-canvas-with-twemoji-and-discord-emoji'
 
 interface TextLine {
   text: string,
@@ -46,7 +47,7 @@ const splitText = (ctx: CanvasRenderingContext2D, text:string) : [TextLine[], nu
   return [result, heightApprox]
 }
 
-export const generateText = (canvasWidth: number, canvasHeight:number, text:string, author?:string) => {
+export const generateText = async (canvasWidth: number, canvasHeight:number, text:string, author?:string) => {
   let fontSize = 50
   let lines: TextLine[] = []
 
@@ -82,7 +83,8 @@ export const generateText = (canvasWidth: number, canvasHeight:number, text:stri
 
     for (const { width, text } of lines) {
       const xPos = Math.ceil((canvasWidth - width) / 2)
-      newCtx.fillText(text, xPos, yPos, canvasWidth)
+      // newCtx.fillText(text, xPos, yPos, canvasWidth)
+      await fillTextWithTwemoji(newCtx, text, xPos, yPos)
       yPos = yPos + Math.ceil(5 * fontSize / 4)
     }
 
