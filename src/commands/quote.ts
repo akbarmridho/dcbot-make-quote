@@ -1,8 +1,21 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
+import { Message } from 'discord.js'
 import { getConfig } from '../database/models/config'
 import { Command } from '../interfaces/command'
 import { imageBufferFromUrl } from '../utils/images/image'
 import { generateBnw } from '../utils/images/style-bnw'
+
+export const quoteOnMentioned = async (message:Message) => {
+  const profileImageBuffer = await imageBufferFromUrl(message.author.avatarURL()!)
+  const generatedImage = await generateBnw(profileImageBuffer, message.content, message.author.tag)
+
+  const serverConfig = await getConfig(message.guildId!)
+
+  const channel = await message.guild?.channels.fetch(serverConfig.channelId!)
+  if (channel?.isText()) {
+    channel.send({ files: [generatedImage] })
+  }
+}
 
 export const quote: Command = {
   data: new SlashCommandBuilder()
@@ -13,6 +26,7 @@ export const quote: Command = {
     .addBooleanOption(option => option.setName('this-channel')
       .setDescription('Send quote to this channel instead')),
   async run (interaction) {
+    // generate message via mention
     await interaction.deferReply()
 
     if (!interaction.channel) return
