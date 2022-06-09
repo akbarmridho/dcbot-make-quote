@@ -9,25 +9,21 @@ export const help: Command = {
   async run (interaction) {
     await interaction.deferReply()
     const embed = new MessageEmbed()
-    embed.setTitle('Mood tracker bot')
+    embed.setTitle('Message Quote Bot')
     embed.setDescription(
-      'This discord bot is designed to help you track your daily mood'
+      'Designed to document discord message'
     )
     embed.addField(
-      'Create or update today mood record',
-      "Use the '/mood' command to create your update for today."
+      'Config',
+      "Use the '/config' command to create update the bot configuration."
     )
     embed.addField(
-      'Show mood history',
-      "Use the '/history' command to show your weekly or monthly mood history."
+      'Quote (via command)',
+      "Use the '/quote' command to show quote certain message."
     )
     embed.addField(
-      'Show mood record',
-      "Use the '/show' command to show detail of a particular record."
-    )
-    embed.addField(
-      'Toggle reminder',
-      "Use the '/remind' command if you want the bot to remind you every day."
+      'Quote (via mention)',
+      'Just reply to a message that want to be quoted and mention this bot.'
     )
     embed.setFooter({ text: `Version ${process.env.npm_package_version}` })
     await interaction.editReply({ embeds: [embed] })
