@@ -23,7 +23,7 @@ async function errorWrapper (func: (interaction: CommandInteraction) => Promise<
 
 export const interactionCreate = async (interaction: Interaction) => {
   if (interaction.isCommand()) {
-    console.log(`${interaction.user.tag} in #${interaction.channel?.id} triggered a command interaction`)
+    // console.log(`${interaction.user.tag} in #${interaction.channel?.id} triggered a command interaction`)
 
     if (commandCollection.has(interaction.commandName)) {
       await errorWrapper(commandCollection.get(interaction.commandName)!.run, interaction)
