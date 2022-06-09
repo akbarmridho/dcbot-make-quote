@@ -8,7 +8,11 @@
     "start": "node -r dotenv/config ./prod/index.js",
     "dev:build": "tsc -w",
     "dev:run": "nodemon -r dotenv/config ./prod/index.js",
-    "start:dev": "concurrently npm:dev:*"
+    "start:dev": "concurrently npm:dev:*",
+    "heroku-postbuild": "node ./prod/deploy-commands.ts"
+  },
+  "engines": {
+    "node": "16.x"
   },
   "repository": {
     "type": "git",
