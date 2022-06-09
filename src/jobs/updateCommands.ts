@@ -9,11 +9,20 @@ export const updateCommands = async () => {
 
   const commandData = commandList.map((command) => command.data.toJSON())
 
-  await rest.put(
-    Routes.applicationGuildCommands(
-      process.env.DISCORD_CLIENT_ID!,
-      process.env.DISCORD_SERVER_ID!
-    ),
-    { body: commandData }
-  )
+  if (!(process.env.PRODUCTION || false)) {
+    await rest.put(
+      Routes.applicationCommands(
+        process.env.DISCORD_CLIENT_ID!
+      ),
+      { body: commandData }
+    )
+  } else {
+    await rest.put(
+      Routes.applicationGuildCommands(
+        process.env.DISCORD_CLIENT_ID!,
+        process.env.DISCORD_SERVER_ID!
+      ),
+      { body: commandData }
+    )
+  }
 }
