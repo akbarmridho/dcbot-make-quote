@@ -9,7 +9,7 @@ export const updateCommands = async () => {
 
   const commandData = commandList.map((command) => command.data.toJSON())
 
-  if (!(process.env.PRODUCTION || false)) {
+  if (process.env.PRODUCTION) {
     await rest.put(
       Routes.applicationCommands(
         process.env.DISCORD_CLIENT_ID!
