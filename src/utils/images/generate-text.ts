@@ -7,9 +7,12 @@ interface TextLine {
 }
 
 const splitText = (ctx: CanvasRenderingContext2D, text:string) : [TextLine[], number] => {
-  const words = new Map(text.split(' ').map(word => {
-    return [word, ctx.measureText(` ${word}`).width]
-  }))
+  const words : TextLine[] = text.split(' ').map(word => {
+    return {
+      text: word,
+      width: ctx.measureText(` ${word}`).width
+    }
+  })
 
   const result : TextLine[] = []
 
@@ -18,7 +21,7 @@ const splitText = (ctx: CanvasRenderingContext2D, text:string) : [TextLine[], nu
     width: 0
   }
 
-  for (const [word, width] of words) {
+  for (const { text: word, width } of words) {
     if (currentLine.width + width <= ctx.canvas.width) {
       currentLine.text = currentLine.text + ` ${word}`
       currentLine.width = currentLine.width + width
@@ -54,7 +57,7 @@ export const generateText = async (canvasWidth: number, canvasHeight:number, tex
   const ctx = createCanvas(canvasWidth, canvasHeight).getContext('2d')
   ctx.fillStyle = 'rgb(255,255,255)'
 
-  while (fontSize >= 20) {
+  while (fontSize >= 10) {
     ctx.font = `${fontSize}px sans-serif`
     let currentHeight = 0
 
@@ -64,7 +67,7 @@ export const generateText = async (canvasWidth: number, canvasHeight:number, tex
       lines.push(...textLines)
     }
 
-    if (currentHeight < canvasHeight) {
+    if (currentHeight <= canvasHeight) {
       break
     }
 
