@@ -3,14 +3,16 @@ import { model, Schema } from 'mongoose'
 export interface ConfigInterface {
   serverId: string,
   sameChannel: boolean,
-  channelId?:string
+  channelId?:string,
+  ignoreEveryone: boolean
 }
 
 export const configSchema = new Schema<ConfigInterface>(
   {
     serverId: { type: String, required: true },
     sameChannel: { type: Boolean, required: true, default: true },
-    channelId: { type: String }
+    channelId: { type: String },
+    ignoreEveryone: { type: Boolean, default : false}
   }
 )
 
@@ -20,6 +22,7 @@ export const getConfig = async (serverId: string) => {
   return (await configModel.findOne({ serverId })) ||
     (await configModel.create({
       serverId,
-      sameChannel: false
+      sameChannel: false, 
+      ignoreEveryone: false
     }))
 }
