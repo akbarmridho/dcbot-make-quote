@@ -25,11 +25,8 @@ export const config: Command = {
     const serverConfig = await getConfig(interaction.guildId)
 
     const sameChannel = interaction.options.getBoolean('same-channel', true)
-    const ignoreEveryone = interaction.options.getBoolean('ignore-everyone', false)
 
     serverConfig.sameChannel = sameChannel
-
-    if ( ignoreEveryone !== undefined ) serverConfig.ignoreEveryone = ignoreEveryone!
 
     if (sameChannel) {
       serverConfig.channelId = interaction.channelId
