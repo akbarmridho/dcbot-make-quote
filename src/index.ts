@@ -19,7 +19,8 @@ import { validateEnv } from './utils/validate-env'
   })
 
   registerFont('fonts/Roboto-Regular.ttf', {
-    family: 'Roboto'
+    family: 'Roboto',
+    weight: 'normal'
   })
 
   const bot = new Client({
