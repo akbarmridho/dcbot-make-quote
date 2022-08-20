@@ -41,19 +41,19 @@ const splitText = (
     if (match.startsWith('***') && match.endsWith('***')) {
       style = 'italicbold'
       stripped = match.slice(3, match.length - 3)
-      ctx.font = `italic bold ${fontSize}px Sans Serif`
+      ctx.font = `italic bold ${fontSize}px "Roboto"`
     } else if (match.startsWith('**') && match.endsWith('**')) {
       style = 'bold'
       stripped = match.slice(2, match.length - 2)
-      ctx.font = `bold ${fontSize}px Sans Serif`
+      ctx.font = `bold ${fontSize}px "Roboto"`
     } else if (match.startsWith('*') && match.endsWith('*')) {
       style = 'italic'
       stripped = match.slice(1, match.length - 1)
-      ctx.font = `italic ${fontSize}px Sans Serif`
+      ctx.font = `italic ${fontSize}px "Roboto"`
     } else {
       style = 'normal'
       stripped = match
-      ctx.font = `${fontSize}px Sans Serif`
+      ctx.font = `${fontSize}px "Roboto"`
     }
 
     return stripped.split(' ').map((word) => {
@@ -138,13 +138,13 @@ export const generateText = async (
 
       for (const word of words) {
         if (word.style === 'bold') {
-          newCtx.font = `bold ${fontSize}px Sans Serif`
+          newCtx.font = `bold ${fontSize}px "Roboto"`
         } else if (word.style === 'italic') {
-          newCtx.font = `italic ${fontSize}px Sans Serif`
+          newCtx.font = `italic ${fontSize}px "Roboto"`
         } else if (word.style === 'italicbold') {
-          newCtx.font = `italic bold ${fontSize}px Sans Serif`
+          newCtx.font = `italic bold ${fontSize}px "Roboto"`
         } else {
-          newCtx.font = `${fontSize}px Sans Serif`
+          newCtx.font = `${fontSize}px "Roboto"`
         }
 
         await fillTextWithTwemoji(newCtx, word.text, xPos, yPos)
@@ -157,7 +157,7 @@ export const generateText = async (
 
     if (author) {
       newCtx.fillStyle = 'rgba(255,255,255,0.8)'
-      newCtx.font = `italic ${Math.ceil(0.8 * fontSize)}px Sans Serif`
+      newCtx.font = `italic ${Math.ceil(0.8 * fontSize)}px "Roboto"`
       newCtx.fillText(
         `- ${author}`,
         Math.ceil((canvasWidth - newCtx.measureText(`- ${author}`).width) / 2),
