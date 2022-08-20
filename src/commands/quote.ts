@@ -6,8 +6,8 @@ import {
 } from 'discord.js'
 import { getConfig } from '../database/models/config'
 import { Command } from '../interfaces/command'
-import { imageBufferFromUrl } from '../utils/images/image'
-import { generateBnw } from '../utils/images/style-bnw'
+import { imageBufferFromUrl } from '../utils/image-quote/image'
+import { generateBnw } from '../utils/image-quote/style-bnw'
 
 export const quoteOnMentioned = async (message: Message) => {
   const profileImageBuffer = await imageBufferFromUrl(
