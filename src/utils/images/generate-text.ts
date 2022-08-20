@@ -53,7 +53,7 @@ const splitText = (
     } else {
       style = 'normal'
       stripped = match
-      ctx.font = `${fontSize}px "Roboto"`
+      ctx.font = `normal ${fontSize}px "Roboto"`
     }
 
     return stripped.split(' ').map((word) => {
@@ -144,7 +144,7 @@ export const generateText = async (
         } else if (word.style === 'italicbold') {
           newCtx.font = `italic bold ${fontSize}px "Roboto"`
         } else {
-          newCtx.font = `${fontSize}px "Roboto"`
+          newCtx.font = `normal ${fontSize}px "Roboto"`
         }
 
         await fillTextWithTwemoji(newCtx, word.text, xPos, yPos)
