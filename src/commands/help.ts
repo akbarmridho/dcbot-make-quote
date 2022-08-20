@@ -6,13 +6,11 @@ export const help: Command = {
   data: new SlashCommandBuilder()
     .setName('help')
     .setDescription('Provides information on using this bot.'),
-  async run (interaction) {
+  async run(interaction) {
     await interaction.deferReply()
     const embed = new MessageEmbed()
     embed.setTitle('Message Quote Bot')
-    embed.setDescription(
-      'Designed to document discord message'
-    )
+    embed.setDescription('Designed to document discord message')
     embed.addField(
       'Config',
       "Use the '/config' command to create update the bot configuration."
