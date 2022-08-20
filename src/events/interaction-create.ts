@@ -1,8 +1,10 @@
-
-import { CommandInteraction, Interaction } from 'discord.js'
+import { ChatInputCommandInteraction, Interaction } from 'discord.js'
 import { commandCollection } from '../commands/_command-list'
 
-async function errorWrapper (func: (interaction: CommandInteraction) => Promise<void>, interaction:CommandInteraction) {
+async function errorWrapper(
+  func: (interaction: ChatInputCommandInteraction) => Promise<void>,
+  interaction: ChatInputCommandInteraction
+) {
   try {
     await func(interaction)
   } catch (e) {
@@ -22,11 +24,14 @@ async function errorWrapper (func: (interaction: CommandInteraction) => Promise<
 }
 
 export const interactionCreate = async (interaction: Interaction) => {
-  if (interaction.isCommand()) {
+  if (interaction.isChatInputCommand()) {
     // console.log(`${interaction.user.tag} in #${interaction.channel?.id} triggered a command interaction`)
 
     if (commandCollection.has(interaction.commandName)) {
-      await errorWrapper(commandCollection.get(interaction.commandName)!.run, interaction)
+      await errorWrapper(
+        commandCollection.get(interaction.commandName)!.run,
+        interaction
+      )
     }
   }
 }

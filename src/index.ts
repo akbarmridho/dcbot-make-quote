@@ -1,5 +1,5 @@
 import { registerFont } from 'canvas'
-import { Client, Intents } from 'discord.js'
+import { Client, GatewayIntentBits, Partials } from 'discord.js'
 import { connectDatabase } from './database/connect'
 import { interactionCreate } from './events/interaction-create'
 import { messageCreate } from './events/message-create'
@@ -25,12 +25,12 @@ import { validateEnv } from './utils/validate-env'
 
   const bot = new Client({
     intents: [
-      Intents.FLAGS.GUILDS,
-      Intents.FLAGS.DIRECT_MESSAGES,
-      Intents.FLAGS.GUILD_MESSAGES,
-      Intents.FLAGS.GUILD_MESSAGE_REACTIONS
+      GatewayIntentBits.Guilds,
+      GatewayIntentBits.DirectMessages,
+      GatewayIntentBits.GuildMessages,
+      GatewayIntentBits.GuildMessageReactions
     ],
-    partials: ['CHANNEL']
+    partials: [Partials.Channel]
   })
 
   bot.on('ready', onReady)

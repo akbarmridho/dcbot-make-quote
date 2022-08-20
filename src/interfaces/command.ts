@@ -1,13 +1,18 @@
-import { SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder } from '@discordjs/builders'
-import { CommandInteraction } from 'discord.js'
+import {
+  SlashCommandBuilder,
+  SlashCommandSubcommandsOnlyBuilder,
+  ChatInputCommandInteraction
+} from 'discord.js'
 
 export interface Command {
-  data: Omit<SlashCommandBuilder, 'addSubcommandGroup' | 'addSubcommand'>| SlashCommandSubcommandsOnlyBuilder,
-  run: (interaction: CommandInteraction) => Promise<void>,
+  data:
+    | Omit<SlashCommandBuilder, 'addSubcommandGroup' | 'addSubcommand'>
+    | SlashCommandSubcommandsOnlyBuilder
+  run: (interaction: ChatInputCommandInteraction) => Promise<void>
 }
 
 export class CommandError extends Error {
-  constructor (message: string) {
+  constructor(message: string) {
     super(message)
     this.name = 'Command failed'
   }

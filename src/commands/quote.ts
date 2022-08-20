@@ -1,5 +1,9 @@
-import { SlashCommandBuilder } from '@discordjs/builders'
-import { Message, MessageEmbed } from 'discord.js'
+import {
+  ChannelType,
+  Message,
+  EmbedBuilder,
+  SlashCommandBuilder
+} from 'discord.js'
 import { getConfig } from '../database/models/config'
 import { Command } from '../interfaces/command'
 import { imageBufferFromUrl } from '../utils/images/image'
@@ -18,13 +22,13 @@ export const quoteOnMentioned = async (message: Message) => {
   const serverConfig = await getConfig(message.guildId!)
 
   const channel = await message.guild?.channels.fetch(serverConfig.channelId!)
-  if (channel?.isText()) {
+  if (channel?.type === ChannelType.GuildText) {
     channel.send({ files: [generatedImage] })
   }
 }
 
 const generateEmbed = (message: Message) => {
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
   embed.setDescription(message.content)
   embed.setAuthor({
     name: message.author.tag,
@@ -77,7 +81,7 @@ export const quote: Command = {
 
     let result: {
       files?: Buffer[]
-      embeds?: MessageEmbed[]
+      embeds?: EmbedBuilder[]
     }
 
     if (style === 'bnw') {
@@ -102,7 +106,7 @@ export const quote: Command = {
       const channel = await interaction.guild?.channels.fetch(
         serverConfig.channelId!
       )
-      if (channel?.isText()) {
+      if (channel?.type === ChannelType.GuildText) {
         channel.send(result)
       }
       await interaction.editReply('Done')

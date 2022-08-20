@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from '@discordjs/builders'
-import { Permissions } from 'discord.js'
+import { PermissionsBitField, SlashCommandBuilder } from 'discord.js'
 import { getConfig } from '../database/models/config'
 import { Command, CommandError } from '../interfaces/command'
 
@@ -7,18 +6,26 @@ export const config: Command = {
   data: new SlashCommandBuilder()
     .setName('config')
     .setDescription('Configure channel target to send quotes.')
-    .addBooleanOption(option => option.setName('same-channel')
-      .setRequired(true)
-      .setDescription('Jika True, hasil quote akan selalu dikirim ke channel ini.')),
-  async run (interaction) {
+    .addBooleanOption((option) =>
+      option
+        .setName('same-channel')
+        .setRequired(true)
+        .setDescription(
+          'Jika True, hasil quote akan selalu dikirim ke channel ini.'
+        )
+    ),
+  async run(interaction) {
     await interaction.deferReply()
 
     if (!interaction.inGuild()) throw new CommandError('Not in guild')
 
     const member = await interaction.guild!.members.fetch(interaction.user!.id)
 
-    if (!member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
-      await interaction.editReply({ content: 'You need administrator permission to be able to change this settings.' })
+    if (!member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+      await interaction.editReply({
+        content:
+          'You need administrator permission to be able to change this settings.'
+      })
       return
     }
 
