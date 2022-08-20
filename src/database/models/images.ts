@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose'
 import dayjs from 'dayjs'
 
-const imageHashes = new Map<string, Map<string, string>>()
+export const imageHashes = new Map<string, Map<string, string>>()
 const EXPIRE_OFFSET = 3 // in days
 
 export interface ImageInterface {
