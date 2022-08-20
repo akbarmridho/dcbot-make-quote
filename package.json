@@ -11,7 +11,7 @@
     "start:dev": "concurrently npm:dev:*"
   },
   "engines": {
-    "node": "18.x"
+    "node": "18.3"
   },
   "repository": {
     "type": "git",
