@@ -1,6 +1,7 @@
 import { PermissionsBitField, SlashCommandBuilder } from 'discord.js'
 import { getRepostConfig } from '../database/models/repost'
 import { Command, CommandError } from '../interfaces/command'
+import { updateWatchedChannels } from './repost'
 
 export const configRepost: Command = {
   data: new SlashCommandBuilder()
@@ -27,6 +28,7 @@ export const configRepost: Command = {
     )
 
     await serverConfig.save()
+    await updateWatchedChannels()
     await interaction.editReply('Perubahan berhasil disimpan.')
   }
 }

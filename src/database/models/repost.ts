@@ -24,3 +24,14 @@ export const getRepostConfig = async (serverId: string, channelId: string) => {
     }))
   )
 }
+
+export const getWatchedChannels = async () => {
+  const configs = await configModel.find()
+  const result: string[] = []
+
+  for (const config of configs) {
+    result.push(config.channelId)
+  }
+
+  return result
+}

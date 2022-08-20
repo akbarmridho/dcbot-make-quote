@@ -1,5 +1,6 @@
 import { registerFont } from 'canvas'
 import { Client, GatewayIntentBits, Partials } from 'discord.js'
+import { updateWatchedChannels } from './commands/repost'
 import { connectDatabase } from './database/connect'
 import { deleteOldHash, getImages } from './database/models/images'
 import { interactionCreate } from './events/interaction-create'
@@ -53,4 +54,6 @@ import { validateEnv } from './utils/validate-env'
   await deleteOldHash()
 
   await getImages()
+
+  await updateWatchedChannels()
 })()

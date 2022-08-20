@@ -1,6 +1,6 @@
 import { Message } from 'discord.js'
 import { quoteOnMentioned } from '../commands/quote'
-import { check } from '../commands/repost'
+import { checkImage, watchedChannels } from '../commands/repost'
 
 export const messageCreate = async (message: Message) => {
   try {
@@ -14,8 +14,12 @@ export const messageCreate = async (message: Message) => {
       )
       await quoteOnMentioned(referencedMessage)
       await message.reply('Done!')
-    } else if (message.inGuild() && message.attachments.size > 0) {
-      await check(message)
+    } else if (
+      message.inGuild() &&
+      message.attachments.size > 0 &&
+      watchedChannels.includes(message.channelId)
+    ) {
+      await checkImage(message)
     }
   } catch (e) {
     if (e instanceof Error) {
