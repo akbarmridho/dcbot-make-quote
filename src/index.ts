@@ -12,6 +12,12 @@ import { validateEnv } from './utils/validate-env'
     weight: 'bold'
   })
 
+  registerFont('fonts/Roboto-Italic.ttf', {
+    family: 'Roboto',
+    weight: 'normal',
+    style: 'italic'
+  })
+
   registerFont('fonts/Roboto-BoldItalic.ttf', {
     family: 'Roboto',
     weight: 'bold',
