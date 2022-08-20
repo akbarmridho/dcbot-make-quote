@@ -1,6 +1,7 @@
 import { registerFont } from 'canvas'
 import { Client, GatewayIntentBits, Partials } from 'discord.js'
 import { connectDatabase } from './database/connect'
+import { deleteOldHash, getImages } from './database/models/images'
 import { interactionCreate } from './events/interaction-create'
 import { messageCreate } from './events/message-create'
 import { onReady } from './events/on-ready'
@@ -48,4 +49,8 @@ import { validateEnv } from './utils/validate-env'
   await connectDatabase()
 
   await bot.login(process.env.DISCORD_BOT_TOKEN)
+
+  await deleteOldHash()
+
+  await getImages()
 })()
