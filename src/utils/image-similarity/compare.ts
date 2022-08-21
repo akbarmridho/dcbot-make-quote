@@ -1,4 +1,4 @@
-const CONFIDENCE_INTERVAL = 95
+const CONFIDENCE_INTERVAL = 90
 
 export function calculateSimilarity(hash1: string, hash2: string) {
   let similarity = 0
@@ -17,7 +17,7 @@ export function getSimilarHash(hash1: string, hashList: Map<string, string>) {
     const similarityScore = calculateSimilarity(hash1, key)
 
     if (similarityScore > CONFIDENCE_INTERVAL) {
-      return hashList.get(key)!
+      return { messageId: hashList.get(key)!, key }
     }
   }
 
