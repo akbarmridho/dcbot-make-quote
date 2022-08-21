@@ -37,7 +37,9 @@ export const checkImage = async (message: Message) => {
           const { messageId, key } = similarity
           try {
             const msg = await message.channel.messages.fetch(messageId)
-            msg.reply('Similar content was found!')
+            msg.reply(
+              `Hello, <@${message.author.id}>! Potentially similar content was found here. Have you checked it if it's a repost?`
+            )
           } catch (e) {
             channelHashes.delete(key)
             await deleteHash(key)

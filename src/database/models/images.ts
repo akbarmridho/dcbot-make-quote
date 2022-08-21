@@ -24,7 +24,11 @@ export const imageSchema = new Schema<ImageInterface>(
 export const imageModel = model<ImageInterface>('Images', imageSchema)
 
 export const getImages = async () => {
-  const result = await imageModel.find()
+  const result = await imageModel.find({
+    createdAt: {
+      $gte: dayjs().subtract(EXPIRE_OFFSET, 'day')
+    }
+  })
   imageHashes.clear()
 
   for (const each of result) {
