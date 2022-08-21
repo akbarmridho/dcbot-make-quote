@@ -36,7 +36,8 @@ import { validateEnv } from './utils/validate-env'
       GatewayIntentBits.Guilds,
       GatewayIntentBits.DirectMessages,
       GatewayIntentBits.GuildMessages,
-      GatewayIntentBits.GuildMessageReactions
+      GatewayIntentBits.GuildMessageReactions,
+      GatewayIntentBits.MessageContent
     ],
     partials: [Partials.Channel]
   })

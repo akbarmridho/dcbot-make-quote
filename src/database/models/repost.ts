@@ -10,15 +10,15 @@ export const repostConfigSchema = new Schema<ConfigRepostInterface>({
   channelId: { type: String, required: true }
 })
 
-export const configModel = model<ConfigRepostInterface>(
+export const repostModel = model<ConfigRepostInterface>(
   'ConfigRepost',
   repostConfigSchema
 )
 
 export const getRepostConfig = async (serverId: string, channelId: string) => {
   return (
-    (await configModel.findOne({ serverId, channelId })) ||
-    (await configModel.create({
+    (await repostModel.findOne({ serverId, channelId })) ||
+    (await repostModel.create({
       serverId,
       channelId
     }))
@@ -26,7 +26,7 @@ export const getRepostConfig = async (serverId: string, channelId: string) => {
 }
 
 export const getWatchedChannels = async () => {
-  const configs = await configModel.find()
+  const configs = await repostModel.find()
   const result: string[] = []
 
   for (const config of configs) {

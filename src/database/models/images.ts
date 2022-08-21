@@ -21,7 +21,7 @@ export const imageSchema = new Schema<ImageInterface>(
   { timestamps: true }
 )
 
-export const imageModel = model<ImageInterface>('ConfigRepost', imageSchema)
+export const imageModel = model<ImageInterface>('Images', imageSchema)
 
 export const getImages = async () => {
   const result = await imageModel.find()
