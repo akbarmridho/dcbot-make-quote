@@ -4,10 +4,10 @@ import {
   EmbedBuilder,
   SlashCommandBuilder
 } from 'discord.js'
-import { getConfig } from '../database/models/config'
+import { getQuoteConfig } from '../database/models/config'
 import { Command } from '../interfaces/command'
-import { imageBufferFromUrl } from '../utils/images/image'
-import { generateBnw } from '../utils/images/style-bnw'
+import { imageBufferFromUrl } from '../utils/image-quote/image'
+import { generateBnw } from '../utils/image-quote/style-bnw'
 
 export const quoteOnMentioned = async (message: Message) => {
   const profileImageBuffer = await imageBufferFromUrl(
@@ -19,7 +19,7 @@ export const quoteOnMentioned = async (message: Message) => {
     message.author.tag
   )
 
-  const serverConfig = await getConfig(message.guildId!)
+  const serverConfig = await getQuoteConfig(message.guildId!)
 
   const channel = await message.guild?.channels.fetch(serverConfig.channelId!)
   if (channel?.type === ChannelType.GuildText) {
@@ -72,7 +72,7 @@ export const quote: Command = {
     await interaction.deferReply()
 
     if (!interaction.channel) return
-    const serverConfig = await getConfig(interaction.guildId!)
+    const serverConfig = await getQuoteConfig(interaction.guildId!)
 
     const messageId = interaction.options.getString('message_id', true)
     const message = await interaction.channel.messages.fetch(messageId)

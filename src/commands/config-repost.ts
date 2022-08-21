@@ -1,19 +1,12 @@
 import { PermissionsBitField, SlashCommandBuilder } from 'discord.js'
-import { getConfig } from '../database/models/config'
+import { getRepostConfig } from '../database/models/repost'
 import { Command, CommandError } from '../interfaces/command'
+import { updateWatchedChannels } from './repost'
 
-export const config: Command = {
+export const configRepost: Command = {
   data: new SlashCommandBuilder()
-    .setName('config')
-    .setDescription('Configure channel target to send quotes.')
-    .addBooleanOption((option) =>
-      option
-        .setName('same-channel')
-        .setRequired(true)
-        .setDescription(
-          'Jika True, hasil quote akan selalu dikirim ke channel ini.'
-        )
-    ),
+    .setName('config-repost')
+    .setDescription('Configure channel target to watch for repost.'),
   async run(interaction) {
     await interaction.deferReply()
 
@@ -29,19 +22,13 @@ export const config: Command = {
       return
     }
 
-    const serverConfig = await getConfig(interaction.guildId)
-
-    const sameChannel = interaction.options.getBoolean('same-channel', true)
-
-    serverConfig.sameChannel = sameChannel
-
-    if (sameChannel) {
-      serverConfig.channelId = interaction.channelId
-    } else {
-      serverConfig.channelId = ''
-    }
+    const serverConfig = await getRepostConfig(
+      interaction.guildId,
+      interaction.channelId
+    )
 
     await serverConfig.save()
+    await updateWatchedChannels()
     await interaction.editReply('Perubahan berhasil disimpan.')
   }
 }
