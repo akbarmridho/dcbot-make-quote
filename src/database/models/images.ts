@@ -52,6 +52,11 @@ export const createHash = async (
   })
 }
 
+export const deleteHash = async (hash: string) => {
+  return await imageModel.deleteOne({
+    hash
+  })
+}
 export const deleteOldHash = async () => {
   return await imageModel.deleteMany({
     createdAt: {

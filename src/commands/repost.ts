@@ -1,5 +1,5 @@
 import { ChannelType, Message } from 'discord.js'
-import { createHash, imageHashes } from '../database/models/images'
+import { createHash, deleteHash, imageHashes } from '../database/models/images'
 import { getWatchedChannels } from '../database/models/repost'
 import { getSimilarHash } from '../utils/image-similarity/compare'
 import { hash } from '../utils/image-similarity/hash'
@@ -16,6 +16,13 @@ export const updateWatchedChannels = async () => {
 }
 
 export const checkImage = async (message: Message) => {
+  if (
+    watchedChannels.includes(message.channelId) &&
+    !hashes.get(message.channelId)
+  ) {
+    hashes.set(message.channelId, new Map<string, string>())
+  }
+
   const channelHashes = hashes.get(message.channelId)
 
   if (!channelHashes) return
@@ -27,13 +34,24 @@ export const checkImage = async (message: Message) => {
 
       if (similarity) {
         if (message.channel.type === ChannelType.GuildText) {
-          const msg = await message.channel.messages.fetch(similarity)
-          msg.reply('Similar content was found!')
+          const { messageId, key } = similarity
+          try {
+            const msg = await message.channel.messages.fetch(messageId)
+            msg.reply('Similar content was found!')
+          } catch (e) {
+            channelHashes.delete(key)
+            await deleteHash(key)
+          }
         }
-      } else {
-        channelHashes.set(imageHash, message.id)
-        await createHash(message.channelId, imageHash, message.id)
       }
+
+      channelHashes.set(imageHash, message.id)
+      const createdImageHash = await createHash(
+        message.channelId,
+        imageHash,
+        message.id
+      )
+      await createdImageHash.save()
     }
   }
 }
