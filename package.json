@@ -37,12 +37,16 @@
   "dependencies": {
     "@discordjs/rest": "^0.4.1",
     "axios": "^0.27.2",
+    "bufferutil": "^4.0.6",
     "canvas": "^2.9.3",
     "dayjs": "^1.11.5",
     "discord.js": "^14.2.0",
     "dotenv": "^16.0.1",
+    "erlpack": "github:discord/erlpack",
     "mongoose": "^6.3.5",
     "node-canvas-with-twemoji-and-discord-emoji": "^1.2.1",
-    "sharp": "^0.30.6"
+    "sharp": "^0.30.6",
+    "utf-8-validate": "^5.0.9",
+    "zlib-sync": "^0.1.7"
   }
 }
