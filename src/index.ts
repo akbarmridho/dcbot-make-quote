@@ -3,6 +3,7 @@ import { Client, GatewayIntentBits, Partials } from 'discord.js'
 import { updateWatchedChannels } from './commands/repost'
 import { connectDatabase } from './database/connect'
 import { deleteOldHash, getImages } from './database/models/images'
+import { deleteOldUrl, getUrls } from './database/models/links'
 import { interactionCreate } from './events/interaction-create'
 import { messageCreate } from './events/message-create'
 import { onReady } from './events/on-ready'
@@ -53,8 +54,10 @@ import { validateEnv } from './utils/validate-env'
   await bot.login(process.env.DISCORD_BOT_TOKEN)
 
   await deleteOldHash()
+  await deleteOldUrl()
 
   await getImages()
+  await getUrls()
 
   await updateWatchedChannels()
 })()

@@ -1,11 +1,12 @@
 import { ChannelType, Message } from 'discord.js'
 import { createHash, deleteHash, imageHashes } from '../database/models/images'
+import { createUrl, deleteUrl, urls } from '../database/models/links'
 import { getWatchedChannels } from '../database/models/repost'
 import { getSimilarHash } from '../utils/image-similarity/compare'
 import { hash } from '../utils/image-similarity/hash'
 
-const hashes = imageHashes
 export const watchedChannels: string[] = []
+
 const mediaTypes = ['image/webp', 'image/png', 'image/jpeg']
 // first key is channelId, second key is the hash, and the last value is the referenced imageId
 
@@ -15,39 +16,28 @@ export const updateWatchedChannels = async () => {
   watchedChannels.push(...updatedChannels)
 }
 
-export const checkImage = async (message: Message) => {
-  if (
-    watchedChannels.includes(message.channelId) &&
-    !hashes.get(message.channelId)
-  ) {
-    hashes.set(message.channelId, new Map<string, string>())
-  }
-
-  const channelHashes = hashes.get(message.channelId)
-
-  if (!channelHashes) return
-
+const checkImage = async (message: Message, maps: Map<string, string>) => {
   for (const attachment of message.attachments.values()) {
     if (mediaTypes.includes(attachment.contentType!)) {
       const imageHash = await hash(attachment.url)
-      const similarity = getSimilarHash(imageHash, channelHashes)
+      const similarity = getSimilarHash(imageHash, maps)
 
       if (similarity) {
         if (message.channel.type === ChannelType.GuildText) {
           const { messageId, key } = similarity
           try {
             const msg = await message.channel.messages.fetch(messageId)
-            msg.reply(
+            await msg.reply(
               `Hello, <@${message.author.id}>! Potentially similar content was found here. Have you checked it if it's a repost?`
             )
           } catch (e) {
-            channelHashes.delete(key)
-            await deleteHash(key)
+            maps.delete(key)
+            await deleteHash(key, message.channelId)
           }
         }
       }
 
-      channelHashes.set(imageHash, message.id)
+      maps.set(imageHash, message.id)
       const createdImageHash = await createHash(
         message.channelId,
         imageHash,
@@ -55,5 +45,58 @@ export const checkImage = async (message: Message) => {
       )
       await createdImageHash.save()
     }
+  }
+}
+
+const checkUrl = async (message: Message, maps: Map<string, string>) => {
+  const embed = message.embeds[0]
+
+  if (embed.url) {
+    if (maps.has(embed.url)) {
+      const refMessageId = maps.get(embed.url)!
+
+      try {
+        const refMessage = await message.channel.messages.fetch(refMessageId)
+        await refMessage.reply(
+          `Hello, <@${message.author.id}>! Potentially similar content was found here. Have you checked it if it's a repost?`
+        )
+      } catch (e) {
+        maps.delete(embed.url)
+        await deleteUrl(embed.url, message.channelId)
+      }
+    }
+    maps.set(embed.url, message.id)
+    const createdUrl = await createUrl(message.channelId, embed.url, message.id)
+    await createdUrl.save()
+  }
+}
+
+export const checkRepost = async (message: Message) => {
+  if (message.attachments.size > 0) {
+    if (
+      watchedChannels.includes(message.channelId) &&
+      !imageHashes.get(message.channelId)
+    ) {
+      imageHashes.set(message.channelId, new Map<string, string>())
+    }
+
+    const channelImageHashes = imageHashes.get(message.channelId)
+
+    if (!channelImageHashes) return
+
+    await checkImage(message, channelImageHashes)
+  } else if (message.embeds.length > 0) {
+    if (
+      watchedChannels.includes(message.channelId) &&
+      !urls.get(message.channelId)
+    ) {
+      urls.set(message.channelId, new Map<string, string>())
+    }
+
+    const channelUrls = urls.get(message.channelId)
+
+    if (!channelUrls) return
+
+    await checkUrl(message, channelUrls)
   }
 }
