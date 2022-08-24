@@ -2,7 +2,7 @@ import { model, Schema } from 'mongoose'
 import dayjs from 'dayjs'
 
 export const urls = new Map<string, Map<string, string>>()
-const EXPIRE_OFFSET = 3 // in days
+const EXPIRE_OFFSET = 7 // in days
 
 export interface UrlInterface {
   channelId: string
