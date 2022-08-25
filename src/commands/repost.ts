@@ -52,8 +52,10 @@ const checkUrl = async (message: Message, maps: Map<string, string>) => {
   const embed = message.embeds[0]
 
   if (embed.url) {
-    if (maps.has(embed.url)) {
-      const refMessageId = maps.get(embed.url)!
+    const url = embed.url.split('?')[0]
+
+    if (maps.has(url)) {
+      const refMessageId = maps.get(url)!
 
       try {
         const refMessage = await message.channel.messages.fetch(refMessageId)
@@ -61,12 +63,12 @@ const checkUrl = async (message: Message, maps: Map<string, string>) => {
           `Hello, <@${message.author.id}>! Potentially similar content was found here. Have you checked it if it's a repost?`
         )
       } catch (e) {
-        maps.delete(embed.url)
-        await deleteUrl(embed.url, message.channelId)
+        maps.delete(url)
+        await deleteUrl(url, message.channelId)
       }
     }
-    maps.set(embed.url, message.id)
-    const createdUrl = await createUrl(message.channelId, embed.url, message.id)
+    maps.set(url, message.id)
+    const createdUrl = await createUrl(message.channelId, url, message.id)
     await createdUrl.save()
   }
 }
