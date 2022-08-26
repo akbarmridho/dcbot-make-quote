@@ -24,7 +24,7 @@ const splitText = (
   text: string,
   fontSize: number
 ): [TextLine[], number] => {
-  const matchedRegex = text.match(REGEX_PATTERN)
+  const matchedRegex = text.replaceAll('||', '').match(REGEX_PATTERN)
 
   if (!matchedRegex) {
     throw new Error('Cannot Match Regex')
