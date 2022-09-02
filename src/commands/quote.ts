@@ -5,18 +5,32 @@ import {
   SlashCommandBuilder
 } from 'discord.js'
 import { getQuoteConfig } from '../database/models/config'
+import { getuserConfig } from '../database/models/user'
 import { Command } from '../interfaces/command'
 import { imageBufferFromUrl } from '../utils/image-quote/image'
 import { generateBnw } from '../utils/image-quote/style-bnw'
 
 export const quoteOnMentioned = async (message: Message) => {
+  const userConfig = await getuserConfig(message.author.id, message.guildId!)
+
   const profileImageBuffer = await imageBufferFromUrl(
-    message.author.avatarURL()!
+    userConfig &&
+      userConfig.profileImage === 'server' &&
+      message.member &&
+      message.member.displayAvatarURL()
+      ? message.member.displayAvatarURL()
+      : message.author.avatarURL()!
   )
+
   const generatedImage = await generateBnw(
     profileImageBuffer,
     message.content,
-    message.author.tag
+    userConfig &&
+      userConfig.authorTag === 'server' &&
+      message.member &&
+      message.member.nickname
+      ? message.member.nickname
+      : message.author.tag
   )
 
   const serverConfig = await getQuoteConfig(message.guildId!)
@@ -78,6 +92,7 @@ export const quote: Command = {
     const message = await interaction.channel.messages.fetch(messageId)
 
     const style = interaction.options.getString('style') || 'bnw'
+    const userConfig = await getuserConfig(message.author.id, message.guildId!)
 
     let result: {
       files?: Buffer[]
@@ -86,12 +101,22 @@ export const quote: Command = {
 
     if (style === 'bnw') {
       const profileImageBuffer = await imageBufferFromUrl(
-        message.author.avatarURL()!
+        userConfig &&
+          userConfig.profileImage === 'server' &&
+          message.member &&
+          message.member.displayAvatarURL()
+          ? message.member.displayAvatarURL()
+          : message.author.avatarURL()!
       )
       const generatedImage = await generateBnw(
         profileImageBuffer,
         message.content,
-        message.author.tag
+        userConfig &&
+          userConfig.authorTag === 'server' &&
+          message.member &&
+          message.member.nickname
+          ? message.member.nickname
+          : message.author.tag
       )
 
       result = { files: [generatedImage] }

@@ -2,7 +2,7 @@ import { PermissionsBitField, SlashCommandBuilder } from 'discord.js'
 import { createUserConfig } from '../database/models/user'
 import { Command, CommandError } from '../interfaces/command'
 
-export const configQuote: Command = {
+export const configUser: Command = {
   data: new SlashCommandBuilder()
     .setName('config-user')
     .setDescription("Set user's quote configuration")

@@ -46,7 +46,8 @@ export const createUserConfig = async (
       serverId
     },
     {
-      upsert: true
+      upsert: true,
+      new: true
     }
   )
 }
