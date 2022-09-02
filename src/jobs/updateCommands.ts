@@ -1,6 +1,5 @@
-import { REST } from '@discordjs/rest'
 import { commandList } from '../commands/_command-list'
-import { Routes } from 'discord.js'
+import { Routes, REST } from 'discord.js'
 
 export const updateCommands = async () => {
   const rest = new REST({ version: '9' }).setToken(

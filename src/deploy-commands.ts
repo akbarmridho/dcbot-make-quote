@@ -1,7 +1,5 @@
-import { REST } from '@discordjs/rest'
-import { Routes } from 'discord.js'
+import { Routes, REST } from 'discord.js'
 import { commandList } from './commands/_command-list'
-
 ;(async () => {
   const rest = new REST({ version: '9' }).setToken(
     process.env.DISCORD_BOT_TOKEN!
