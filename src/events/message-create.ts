@@ -12,7 +12,10 @@ export const messageCreate = async (message: Message) => {
       const referencedMessage = await message.channel.messages.fetch(
         message.reference.messageId
       )
-      await quoteOnMentioned(referencedMessage)
+      const serverImage = message.content.includes('serverImage')
+      const nickname = message.content.includes('nickname')
+
+      await quoteOnMentioned(referencedMessage, { serverImage, nickname })
       await message.reply('Done!')
     } else if (
       message.inGuild() &&

@@ -12,18 +12,27 @@ export const help: Command = {
     embed.setDescription('Designed to document discord message')
     embed.addFields([
       {
-        name: 'Config',
+        name: 'Config Quote',
         value:
-          "Use the '/config' command to create update the bot configuration."
+          "Use the '/config-quote' command to create update the bot configuration."
+      },
+      {
+        name: 'Config Repost',
+        value:
+          "Use the '/config-repost' command to add repost tracker to certain channel"
+      },
+      {
+        name: 'Config User',
+        value: "Use the 'config-user' command to update user's quote style"
       },
       {
         name: 'Quote (via command)',
-        value: "Use the '/quote' command to show quote certain message."
+        value: "Use the '/quote' command to show quote certain message. "
       },
       {
         name: 'Quote (via mention)',
         value:
-          'Just reply to a message that want to be quoted and mention this bot.'
+          'Just reply to a message that want to be quoted and mention this bot. Optional query: add nickname or serverImage argument to overwrite the quote configuration'
       }
     ])
 

@@ -10,12 +10,19 @@ import { Command } from '../interfaces/command'
 import { imageBufferFromUrl } from '../utils/image-quote/image'
 import { generateBnw } from '../utils/image-quote/style-bnw'
 
-export const quoteOnMentioned = async (message: Message) => {
+interface Args {
+  serverImage?: boolean
+  nickname?: boolean
+}
+
+export const quoteOnMentioned = async (
+  message: Message,
+  { serverImage, nickname }: Args
+) => {
   const userConfig = await getuserConfig(message.author.id, message.guildId!)
 
   const profileImageBuffer = await imageBufferFromUrl(
-    userConfig &&
-      userConfig.profileImage === 'server' &&
+    (serverImage || (userConfig && userConfig.profileImage === 'server')) &&
       message.member &&
       message.member.displayAvatarURL()
       ? message.member.displayAvatarURL()
@@ -25,8 +32,7 @@ export const quoteOnMentioned = async (message: Message) => {
   const generatedImage = await generateBnw(
     profileImageBuffer,
     message.content,
-    userConfig &&
-      userConfig.authorTag === 'server' &&
+    (nickname || (userConfig && userConfig.authorTag === 'server')) &&
       message.member &&
       message.member.nickname
       ? message.member.nickname
@@ -70,6 +76,20 @@ export const quote: Command = {
         .setName('this-channel')
         .setDescription('Send quote to this channel instead')
     )
+    .addBooleanOption((option) =>
+      option
+        .setName('server-image')
+        .setDescription(
+          'Configure target image to server profile image instead (if any)'
+        )
+    )
+    .addBooleanOption((option) =>
+      option
+        .setName('nickname')
+        .setDescription(
+          'Configure target name to server nickname instead (if any)'
+        )
+    )
     .addStringOption((option) =>
       option.setName('style').setDescription('Set quote styles').addChoices(
         {
@@ -93,6 +113,8 @@ export const quote: Command = {
 
     const style = interaction.options.getString('style') || 'bnw'
     const userConfig = await getuserConfig(message.author.id, message.guildId!)
+    const serverImage = interaction.options.getBoolean('server-image')
+    const nickname = interaction.options.getBoolean('nickname')
 
     let result: {
       files?: Buffer[]
@@ -101,8 +123,7 @@ export const quote: Command = {
 
     if (style === 'bnw') {
       const profileImageBuffer = await imageBufferFromUrl(
-        userConfig &&
-          userConfig.profileImage === 'server' &&
+        (serverImage || (userConfig && userConfig.profileImage === 'server')) &&
           message.member &&
           message.member.displayAvatarURL()
           ? message.member.displayAvatarURL()
@@ -111,8 +132,7 @@ export const quote: Command = {
       const generatedImage = await generateBnw(
         profileImageBuffer,
         message.content,
-        userConfig &&
-          userConfig.authorTag === 'server' &&
+        (nickname || (userConfig && userConfig.authorTag === 'server')) &&
           message.member &&
           message.member.nickname
           ? message.member.nickname
