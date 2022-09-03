@@ -105,7 +105,7 @@ export const generateText = async (
   const ctx = createCanvas(canvasWidth, canvasHeight).getContext('2d')
   ctx.fillStyle = 'rgb(255,255,255)'
 
-  while (fontSize >= 10) {
+  while (fontSize >= 5) {
     let currentHeight = 0
 
     for (const textLine of text.split('\n')) {
@@ -114,15 +114,20 @@ export const generateText = async (
       lines.push(...textLines)
     }
 
-    if (currentHeight <= canvasHeight) {
+    if (currentHeight <= canvasHeight - 30) {
       break
     }
 
-    fontSize = fontSize - 10
+    if (fontSize <= 10) {
+      fontSize = fontSize - 1
+    } else {
+      fontSize = fontSize - 10
+    }
+
     lines = []
   }
 
-  let yPos = 50
+  let yPos = 20
 
   if (lines) {
     const newHeight = author
@@ -157,7 +162,16 @@ export const generateText = async (
 
     if (author) {
       newCtx.fillStyle = 'rgba(255,255,255,0.8)'
-      newCtx.font = `italic ${Math.ceil(0.8 * fontSize)}px "Roboto"`
+      let downscale = 1
+      newCtx.font = `italic ${Math.ceil(0.8 * downscale * fontSize)}px "Roboto"`
+
+      while (newCtx.measureText(`- ${author}`).width > canvasWidth) {
+        downscale *= 0.8
+        newCtx.font = `italic ${Math.ceil(
+          0.8 * downscale * fontSize
+        )}px "Roboto"`
+      }
+
       newCtx.fillText(
         `- ${author}`,
         Math.ceil((canvasWidth - newCtx.measureText(`- ${author}`).width) / 2),
