@@ -104,10 +104,9 @@ export const generateText = async (
 
   const ctx = createCanvas(canvasWidth, canvasHeight).getContext('2d')
   ctx.fillStyle = 'rgb(255,255,255)'
+  let currentHeight = 0
 
   while (fontSize >= 5) {
-    let currentHeight = 0
-
     for (const textLine of text.split('\n')) {
       const [textLines, textHeight] = splitText(ctx, textLine, fontSize)
       currentHeight = currentHeight + textHeight
@@ -125,14 +124,15 @@ export const generateText = async (
     }
 
     lines = []
+    currentHeight = 0
   }
 
-  let yPos = 20
-
   if (lines) {
+    let yPos = 40
+
     const newHeight = author
-      ? Math.ceil(1.25 * fontSize * (lines.length + 1))
-      : Math.ceil(1.25 * fontSize * lines.length)
+      ? Math.ceil(1.25 * fontSize * (lines.length + 1.5))
+      : Math.ceil(1.25 * fontSize * (lines.length + 0.5))
     const newCanvas = createCanvas(canvasWidth, newHeight)
     const newCtx = newCanvas.getContext('2d')
     newCtx.fillStyle = 'rgb(255,255,255)'
