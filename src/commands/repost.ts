@@ -4,6 +4,8 @@ import { createUrl, deleteUrl, urls } from '../database/models/links'
 import { getWatchedChannels } from '../database/models/repost'
 import { getSimilarHash } from '../utils/image-similarity/compare'
 import { hash } from '../utils/image-similarity/hash'
+import { URL } from 'node:url'
+import exception from '../utils/url-exception'
 
 export const watchedChannels: string[] = []
 
@@ -52,7 +54,26 @@ const checkUrl = async (message: Message, maps: Map<string, string>) => {
   const embed = message.embeds[0]
 
   if (embed.url) {
-    const url = embed.url.split('?')[0]
+    // add whitelist for youtube link on v query params
+    const urlObject = new URL(embed.url)
+
+    if (exception.has(urlObject.hostname)) {
+      const keys = exception.get(urlObject.hostname)!
+      const toDelete: string[] = []
+      for (const key of urlObject.searchParams.keys()) {
+        if (!keys.includes(key)) {
+          toDelete.push(key)
+        }
+      }
+
+      for (const key of toDelete) {
+        urlObject.searchParams.delete(key)
+      }
+    }
+
+    const url = urlObject.toString()
+
+    // const url = embed.url.split('?')[0]
 
     if (maps.has(url)) {
       const refMessageId = maps.get(url)!
