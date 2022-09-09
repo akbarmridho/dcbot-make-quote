@@ -1,4 +1,3 @@
-import { Dayjs } from 'dayjs'
 import { model, Schema } from 'mongoose'
 
 export interface QuoteConfigInterface {
@@ -11,11 +10,6 @@ export interface QuoteConfigInterface {
   content: string
   createdAt: Date
   updatedAt: Date
-}
-
-interface LeaderboardInterface {
-  _id: string
-  score: number
 }
 
 export const quoteSchema = new Schema<QuoteConfigInterface>(
@@ -65,66 +59,4 @@ export const createQuote = async (
   })
 }
 
-export const getLeaderboard = async (
-  channelId: string,
-  startDate?: Dayjs,
-  endDate?: Dayjs
-) => {
-  return await quoteModel
-    .aggregate<LeaderboardInterface>()
-    .match({
-      channelId,
-      createdAt: {
-        $gte: startDate?.toDate()
-      },
-      endDate: {
-        $lte: endDate?.toDate()
-      }
-    })
-    .group({
-      _id: '$userId',
-      score: {
-        $sum: {
-          $add: [
-            {
-              $multiply: ['$reactionCount', 3]
-            },
-            {
-              $multiply: ['$directReplyCount', 2]
-            },
-            10
-          ]
-        }
-      }
-    })
-    .sort({ score: 'desc' })
-    .limit(10)
-    .exec()
-
-  // useCache
-  // bila lebih dari satu bulan, buat agregat dan simpan ke model lain
-  // hasil agregat bisa merupakan leaderboard per bulan
-  //   const result = await quoteModel.find({
-  //     channelId,
-  //     createdAt: {
-  //       $gte: startDate?.toDate()
-  //     },
-  //     endDate: {
-  //       $lte: endDate?.toDate()
-  //     }
-  //   })
-
-  //   // key as userId and value as total score
-  //   const userScore = new Map<string, number>()
-
-  //   result.forEach((data) => {
-  //     const score = 10 + data.reactionCount * 3 + data.directReplyCount * 2
-  //     if (userScore.has(data.userId)) {
-  //       userScore.set(data.userId, userScore.get(data.userId)! + score)
-  //     } else {
-  //       userScore.set(data.userId, score)
-  //     }
-  //   })
-
-  //   return userScore
-}
+export const getUserTopQuote = () => {}
